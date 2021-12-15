@@ -13,49 +13,71 @@ public class Main {
 
         while (true) { // Запускаем бесконечный цикл
             printMenu(name); // Печатаем меню
-            int command = scanner.nextInt(); // Считываем команду
-            if (command == 1) {
-                System.out.println("За какой месяц?");
-                System.out.println("Янв; Фев; Март; Апр; Май; Июнь; Июль; Авг; Сен; Окт; Ноя; Дек");
-                String mont = scanner.next();
-                if (tracker.year.containsKey(mont)) { // Проверяем наличие введенного месяца (ключа)
-                    System.out.println("За какое число?");
-                    int day = scanner.nextInt();
-                    System.out.println("Сколько шагов Вы прошли?");
-                    int step = scanner.nextInt();
-                    if (step < 0) {
-                        System.out.println("Число шагов не может быть меньше 0");
+            String command = scanner.next(); // Считываем команду в формате строки
+                if (command.equals("1")) { // Cверяем введенное значение со значением строки
+                    System.out.println("За какой месяц?");
+                    System.out.println("Янв;Фев;Март;Апр;Май;Июнь;Июль;Авг;Сен;Окт;Ноя;Дек");
+                    String month = scanner.next(); // Считываем команду в формате строки
+                    if (tracker.year.containsKey(month)) { // Проверяем наличие месяца (ключа)
+                        System.out.println("За какое число?");
+                        String dayStr = scanner.next(); // Считываем команду в формате строки
+                        boolean day = converter.isNumeric(dayStr); // Отправляем значение в метод
+                        if (day == false){
+                            System.out.println("Такого значения нет повторите ввод");
+                        } else {
+                            Integer dayInt = Integer.parseInt(dayStr);
+                            System.out.println("Сколько шагов Вы прошли?");
+                            String stepStr = scanner.next();
+                            boolean step = converter.isNumeric(stepStr);
+                                if (step == false) {
+                                    System.out.println("Такого значения нет повторите ввод");
+                                } else {
+                                    Integer stepInt = Integer.parseInt(stepStr);
+                                    if (stepInt < 0) {
+                                        System.out.println("Число шагов не может быть меньше 0");
+                                    } else {
+                                        tracker.inputStep(dayInt, stepInt, month); // Вызываем
+                                        // метод для ввода данных
+                                        }
+                                }
+                        }
                     } else {
-                        tracker.inputStep(day, step, mont); // Вызываем метод для ввода данных
+                            System.out.println("Такого месяца нет");
                     }
-                } else {
-                    System.out.println("Такого месяца нет");
-                }
-            } else if (command == 2) {
-                System.out.println("За какой месяц ?");
-                System.out.println("Янв; Фев; Март; Апр; Май; Июнь; Июль; Авг; Сен; Окт; Ноя; Дек");
-                String mont = scanner.next();
-                if (tracker.year.containsKey(mont)) { // Проверяем наличие введенного месяца (ключа)
-                    int sumStep = (tracker.printStat(mont)); // Вызываем метод вывода статистики, возвращаем сумму шагов
-                    converter.convert(sumStep); // Передаем сумму шагов для конвертации
-                } else {
-                    System.out.println("Такого месяца нет");
-                }
-                } else if (command == 3) {
-                    System.out.println("Введите новую цель");
-                    int newPurpose = scanner.nextInt(); // Меняем значение цели
-                    if (newPurpose < 0) {
-                        System.out.println("Значение должно быть больше 0, попробуйте еще раз");
+                } else if (command.equals("2")) {
+                    System.out.println("За какой месяц ?");
+                    System.out.println("Янв;Фев;Март;Апр;Май;Июнь;Июль;Авг;Сен;Окт;Ноя;Дек");
+                    String month = scanner.next();
+                    if (tracker.year.containsKey(month)) { // Проверяем наличие месяца (ключа)
+                        int sumStep = (tracker.printStat(month)); // Вызываем метод вывода
+                        // статистики, возвращаем сумму шагов
+                        converter.convert(sumStep); // Передаем сумму шагов для конвертации
                     } else {
-                        tracker.changeZiel(newPurpose);
+                        System.out.println("Такого месяца не бывает");
                     }
-                } else if (command == 0) {
+                } else if (command.equals("3")) {
+                        System.out.println("Введите новую цель");
+                        String newPurpose = scanner.next(); // Меняем значение цели
+                        boolean purposeStr = converter.isNumeric(newPurpose );
+                        if (purposeStr == false) {
+                            System.out.println("Это не достижимая цель, повторите ввод");
+                            } else {
+                                Integer newPurpose1 = Integer.parseInt(newPurpose);
+                                if (newPurpose1 < 0) {
+                                    System.out.println("Значение должно быть больше 0");
+                                } else {
+                                    tracker.changeZiel(newPurpose1);
+                                }
+                        }
+                } else if (command.equals("0")) {
                     break; // Прерываем работу цикла
                 } else {
                     System.out.println("Такой команды пока нет, введите команду из списка!");
                 }
             }
         }
+
+
 
         public static void printMenu (String name){
             System.out.println(name + "! Сделайте Ваш выбор");
